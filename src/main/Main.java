@@ -1,6 +1,7 @@
 package main;
 
 import secao10.Quarto;
+import secao13.*;
 import secao8.Account;
 import secao8.Employee;
 import secao8.Rectangle;
@@ -8,12 +9,13 @@ import secao8.Student;
 import secao8.util.CurrencyConverter;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Main {
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ParseException {
 		
 		Locale.setDefault(Locale.US);
 		System.out.println("Insira o nome do exercicio");
@@ -69,19 +71,23 @@ public class Main {
 			case "12":
 				Main.exercicio12(scanner);
 				break;
-				
+			
 			case "13":
 				Main.exercicio13(scanner);
 				break;
 			case "14":
 				Main.exercicio14(scanner);
 				break;
-				
+			
+			case "15":
+				Main.exercicio15(scanner);
+				break;
+			
 			case "Default":
 			default:
 				System.out.println("não encontrado");
 				break;
-				
+			
 		}
 		
 		scanner.close();
@@ -89,12 +95,62 @@ public class Main {
 		
 	}
 	
+	private static void exercicio15(Scanner scanner) throws ParseException {
+		
+		scanner.nextLine();
+		System.out.println("Enter client data:");
+		
+		System.out.print("Name:");
+		String name = scanner.nextLine();
+		
+		System.out.print("Email:");
+		String email = scanner.nextLine();
+		
+		System.out.print("Birth date (DD/MM/YYYY):");
+		String birthDateString = scanner.next();
+		
+		Date birthDate = new SimpleDateFormat("dd/MM/yyyy").parse(birthDateString);
+		Client client = new Client(name,email, birthDate);
+		
+		System.out.println("Enter order data:");
+		System.out.print("Status:");
+		OrderStatus orderStatus = OrderStatus.valueOf(scanner.next());
+		
+		System.out.print("How many items to this order ? ");
+		int itemsQuantity = scanner.nextInt();
+		
+		Order order = new Order(new Date(), orderStatus);
+		order.setClient(client);
+		
+		for (int i = 0 ; i < itemsQuantity; i++){
+			
+			System.out.println("Enter #" + (i + 1) +" item data:");
+			scanner.nextLine();
+			System.out.print("Product name: ");
+			String productName = scanner.nextLine();
+			
+			System.out.print("Product price: ");
+			double productPrice = scanner.nextDouble();
+			
+			System.out.print("Quantity: ");
+			int productQuantity = scanner.nextInt();
+			
+			Product product = new Product(productName, productPrice);
+			OrderItem orderItem = new OrderItem(productQuantity, product);
+			
+			order.addItem(orderItem);
+		}
+		
+		System.out.print(order.toString());
+		
+	}
+	
 	private static void exercicio14(Scanner scanner) {
 		
 		Integer[][] integers = new Integer[scanner.nextInt()][scanner.nextInt()];
 		
-		for (int i = 0; i<integers.length; i++){
-			for (int j = 0; j < integers[0].length; j++){
+		for (int i = 0; i < integers.length; i++) {
+			for (int j = 0; j < integers[0].length; j++) {
 				integers[i][j] = scanner.nextInt();
 			}
 		}
