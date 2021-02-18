@@ -2,6 +2,8 @@ package main;
 
 import secao10.Quarto;
 import secao13.*;
+import secao14.ImportedProduct;
+import secao14.UsedProduct;
 import secao8.Account;
 import secao8.Employee;
 import secao8.Rectangle;
@@ -82,6 +84,9 @@ public class Main {
 			case "15":
 				Main.exercicio15(scanner);
 				break;
+			case "16":
+				Main.exercicio16(scanner);
+				break;
 			
 			case "Default":
 			default:
@@ -92,6 +97,53 @@ public class Main {
 		
 		scanner.close();
 		System.out.println("Fim do programa");
+		
+	}
+	
+	private static void exercicio16(Scanner scanner) throws ParseException {
+		
+		System.out.print("Enter the number of products: ");
+		int quantityOfProducts = scanner.nextInt();
+		List<secao14.Product> products = new ArrayList(quantityOfProducts);
+		
+		for (int i = 0; i < quantityOfProducts; i++) {
+			
+			System.out.print("Common, used or imported (c/u/i)?");
+			char tipo = scanner.next().charAt(0);
+			
+			System.out.print("Name: ");
+			scanner.nextLine();
+			String name = scanner.nextLine();
+			
+			System.out.print("Price: ");
+			double price = scanner.nextDouble();
+			
+			switch (tipo) {
+				case 'i':
+					System.out.print("Customs fee: ");
+					double customsFee = scanner.nextDouble();
+					
+					products.add(new ImportedProduct(name, price, customsFee));
+					
+					break;
+				
+				case 'u':
+					
+					System.out.print("Manufactured date (DD/MM/YYYY): ");
+					Date manufactureDate = new SimpleDateFormat("dd/MM/yyyy").parse(scanner.next());
+					
+					products.add(new UsedProduct(name, price, manufactureDate));
+					
+					break;
+				
+				default:
+					products.add(new secao14.Product(name,price));
+					break;
+			}
+		}
+		
+		System.out.println("PRICE TAGS:");
+		products.stream().forEach(p -> System.out.println(p.priceTag()));
 		
 	}
 	
