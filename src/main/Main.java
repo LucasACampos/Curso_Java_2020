@@ -2,8 +2,9 @@ package main;
 
 import secao10.Quarto;
 import secao13.*;
-import secao14.ImportedProduct;
-import secao14.UsedProduct;
+import secao13.Product;
+import secao14.*;
+import secao15.exception.WithdrawException;
 import secao8.Account;
 import secao8.Employee;
 import secao8.Rectangle;
@@ -87,7 +88,14 @@ public class Main {
 			case "16":
 				Main.exercicio16(scanner);
 				break;
-			
+			case "17":
+				Main.exercicio17(scanner);
+				break;
+				
+			case "18":
+				Main.exercicio18(scanner);
+				break;
+				
 			case "Default":
 			default:
 				System.out.println("não encontrado");
@@ -97,6 +105,91 @@ public class Main {
 		
 		scanner.close();
 		System.out.println("Fim do programa");
+		
+	}
+	
+	private static void exercicio18(Scanner scanner) {
+		
+		System.out.println("Enter account data");
+		
+		System.out.print("Number: ");
+		int number = scanner.nextInt();
+		
+		System.out.print("Holder: ");
+		scanner.nextLine();
+		String holder = scanner.nextLine();
+		
+		System.out.print("Initial balance: ");
+		double initialBalance = scanner.nextDouble();
+		
+		System.out.print("Withdraw limit: ");
+		double withdrawLimit = scanner.nextDouble();
+		
+		secao15.Account account = new secao15.Account(number,holder, initialBalance, withdrawLimit);
+		
+		System.out.printf("%nEnter amount for withdraw:");
+		
+		try {
+			account.withdraw(scanner.nextDouble());
+			
+			System.out.println("New balance: " + account.getBalance());
+		}catch (WithdrawException e){
+			System.out.println("Withdraw error: " + e.getMessage());
+		}
+	
+	}
+	
+	private static void exercicio17(Scanner scanner) {
+		
+		System.out.print("Enter the number of tax payers: ");
+		int numberOfPayers = scanner.nextInt();
+		
+		List<Person> personList = new ArrayList<>(numberOfPayers);
+		
+		for (int i = 0; i < numberOfPayers; i++) {
+			
+			System.out.printf("Tax payer #%d data:%n", (i + 1));
+			
+			System.out.print("individual or company (i/c)? ");
+			char tipeOfPayer = scanner.next().charAt(0);
+			
+			System.out.print("Name: ");
+			scanner.nextLine();
+			String name = scanner.nextLine();
+			
+			System.out.print("Anual income: ");
+			double anualIncome = scanner.nextDouble();
+			
+			Person person;
+			
+			if('i' == tipeOfPayer){
+				
+				System.out.print("Health expenditures: ");
+				double healthExpenditures = scanner.nextDouble();
+				
+				person = new PhysicalPerson(name, BigDecimal.valueOf(anualIncome), healthExpenditures);
+			}else {
+				
+				System.out.print("Number of employees: ");
+				int numberOfEmployees = scanner.nextInt();
+				
+				person = new JuridicPerson(name, BigDecimal.valueOf(anualIncome), numberOfEmployees);
+			}
+			
+			personList.add(person);
+		}
+		
+		BigDecimal totalTax = BigDecimal.ZERO;
+		
+		System.out.println("TAXES PAID:");
+		for (Person person : personList){
+			BigDecimal taxOfThisPerson = person.calculateTax();
+			
+			System.out.printf("%s: $ %.2f %n", person.getName(), taxOfThisPerson);
+			totalTax = totalTax.add(taxOfThisPerson);
+		}
+		
+		System.out.printf("TOTAL TAXES : $ %.2f%n", totalTax);
 		
 	}
 	
